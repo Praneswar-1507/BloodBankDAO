@@ -82,19 +82,11 @@ public class Jdbc {
         }
         if (existingList.contains(a.getDonorId())) {
             System.out.println("Donor ID already exist");
-            return true;
+            return false;
         } else {
             System.out.println("Donor Id available for Registration");
-            String registerStudent = "insert into Bank(donor_id,donor_name,blood_type,quantity)values(?,?,?,?)";
-            PreparedStatement ps1 = connection.prepareStatement(registerStudent);
-            ps1.setString(1, a.getDonorId());
-            ps1.setString(2,a.getDonorName());
-            ps1.setString(3, a.getBloodType());
-            ps1.setInt(4, a.getQuantity());
-            System.out.println("Getting donor details : " + a.getDonorId() +a.getDonorName() +a.getBloodGroup() +a.getQuantity());
-
-            int rows = ps1.executeUpdate();
-            return false;
+   
+            return true;
         }
     }
 
