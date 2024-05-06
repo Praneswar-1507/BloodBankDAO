@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.bloodbank.model.BloodBank;
 
@@ -68,26 +69,31 @@ public class Jdbc {
         }
 	        return list;	  
 	        }
-	public static boolean register(BloodBank a,String donorId) throws ClassNotFoundException, SQLException {
-
-        
-        ArrayList existingList = new ArrayList();
+	public static boolean register(BloodBank a,String donorID,Scanner scanner) throws ClassNotFoundException, SQLException {
+		boolean flag = false;
+        ArrayList<String> existingList = new ArrayList<String>();
         Connection connection =Util.getConnection();
         String query = "select donor_id from Bank";
         PreparedStatement ps = connection.prepareStatement(query);
         ResultSet resultSet = ps.executeQuery();
         while (resultSet.next()) {
-             donorId = resultSet.getString("donor_id");
-            existingList.add(donorId);
+             donorID = resultSet.getString("donor_id");
+            existingList.add(donorID);
         }
-        if (existingList.contains(a.getDonorId())) {
-            System.out.println("Donor ID already exist");
-            return false;
-        } else {
-            System.out.println("Donor Id available for Registration");
-   
-            return true;
+        while(true) {
+            if (existingList.contains(a.getDonorId())) {
+                System.out.println("Donor ID already exist");
+                System.out.println("Enter Donor Id");
+    			donorID = scanner.next();
+    			a.setDonorId(donorID);
+                flag = false;
+            } else {
+                System.out.println("Donor Id available for Registration");
+                flag = true;
+                break;
+            }
         }
+        return flag;
     }
 
 	}

@@ -91,7 +91,7 @@ public class BloodBankUser {
 				System.out.println("Enter Donor Id");
 				donorID = scanner.next();
 				a.setDonorId(donorID);
-				if(Jdbc.register(a,a.getDonorId())) {
+				if(Jdbc.register(a,a.getDonorId(),scanner)) {
 				System.out.println("Enter user name:");
 				donorName = scanner.next();
 				while (!donorName.matches("^[a-zA-z]+$")) {
@@ -123,11 +123,7 @@ public class BloodBankUser {
 				b.donate(a.getDonorName(), a.getBloodType(), a.getQuantity());
 
 			}
-				else {
-					System.out.println("Enter Donor Id");
-					donorID = scanner.next();
-					a.setDonorId(donorID);
-				}
+				
 			BloodBankAdmin g = new BloodBankAdmin();
 			g.DonorUpdate(a);
 			}
