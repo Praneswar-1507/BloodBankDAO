@@ -123,10 +123,11 @@ public class BloodBankUser {
 				b.donate(a.getDonorName(), a.getBloodType(), a.getQuantity());
 
 			}
-				
+			
+			}
+			
 			BloodBankAdmin g = new BloodBankAdmin();
 			g.DonorUpdate(a);
-			}
 			} else {
 			System.out.println("Enter Recipient name:");
 			String recipientName = scanner.next();

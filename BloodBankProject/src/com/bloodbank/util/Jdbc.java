@@ -13,34 +13,40 @@ import com.bloodbank.model.BloodBank;
 public class Jdbc {
 	
 
-	public static void update(String donorId, String donorName, String bloodType, int quantity)
-			throws ClassNotFoundException, SQLException {
+	public static void update(int quantity,String bloodType)throws ClassNotFoundException, SQLException {
 		Connection connection = Util.getConnection();
-		String updateTable = "update Bank set donor_name=?,quantity=? where donor_id=?";
-		PreparedStatement p = connection.prepareStatement(updateTable);
-		p.setString(3, donorId);
-		p.setString(1, donorName);
-		p.setInt(2, quantity);
-		int row = p.executeUpdate();
-		System.out.println("updated data:" + row);
+		int totalQty=0;
+		String updateStock="select quantity_available from stock where bloodType=?";
+		PreparedStatement p = connection.prepareStatement(updateStock);
+		p.setString(1,bloodType);
+		ResultSet resultSet= p.executeQuery();
+		if (resultSet.next()) {
+			int qty= resultSet.getInt("quantity_available");
+			totalQty= qty+quantity;
+		}
+		String updatedStock = "update stock set quantity_available = "+totalQty+" where bloodType= '"+bloodType+"';";
+		 p = connection.prepareStatement(updatedStock);
+		 int row=p.executeUpdate();
+		 System.out.println("updated  :"+row);
 		connection.close();
 	}
 
 	public static void delete(String donorId) throws ClassNotFoundException, SQLException {
 		Connection connection = Util.getConnection();
-		String query = "delete from Bank where donor_id=?";
-		PreparedStatement p = connection.prepareStatement(query);
+		String deleteid = "delete from Bank where donor_id=?";
+		PreparedStatement p = connection.prepareStatement(deleteid);
 		p.setString(1, donorId);
 		int row = p.executeUpdate();
 		System.out.println("Deleted data: " + row);
 		connection.close();
-	}
+		}
+	
 
 	public static void insert(String donorId,String donorName,String bloodType,int quantity)throws ClassNotFoundException,SQLException
 	         {
 	          Connection connection = Util.getConnection();
-	          String query="insert into Bank values(?,?,?,?)";
-	          PreparedStatement p= connection.prepareStatement(query);
+	          String insertdata="insert into Bank values(?,?,?,?)";
+	          PreparedStatement p= connection.prepareStatement(insertdata);
 	          p.setString(1,donorId);
 	          p.setString(2,donorName);
 	          p.setString(3,bloodType);
@@ -50,19 +56,21 @@ public class Jdbc {
 	          connection.close();
 	         }
 
-	public static List<BloodBank> listofStudents() throws ClassNotFoundException, SQLException {
+	public static List<BloodBank> bloodBankDetails() throws ClassNotFoundException, SQLException {
 	        Connection connection = Util.getConnection();
-	        String query = "select id,name, grade from student";
+	        String query = "select donor_id,donor_name,blood_type, quantity from Bank";
 	        PreparedStatement ps = connection.prepareStatement(query);	
-	        ArrayList<BloodBank> list = new ArrayList();	
+	        ArrayList<BloodBank> list = new ArrayList<>();	
 	        ResultSet resultSet = ps.executeQuery();
 	        while (resultSet.next()) {   
-	        	String donorId = resultSet.getString("id");
-	        	String donorName = resultSet.getString("name");
+	        	String donorId = resultSet.getString("donor_id");
+	        	String donorName = resultSet.getString("donor_name");
+	        	String bloodtype=resultSet.getString("blood_type");
 	        	int quantity = resultSet.getInt("quantity");
 	        	BloodBank stud1 = new BloodBank();
 	        	stud1.setDonorId(donorId);
-	            stud1.setDonorName(donorName);	           
+	            stud1.setDonorName(donorName);
+	            stud1.setBloodType(bloodtype);
 	            stud1.setQuantity(quantity);
 	            list.add(stud1);
 	            System.out.println(list);
@@ -73,8 +81,8 @@ public class Jdbc {
 		boolean flag = false;
         ArrayList<String> existingList = new ArrayList<String>();
         Connection connection =Util.getConnection();
-        String query = "select donor_id from Bank";
-        PreparedStatement ps = connection.prepareStatement(query);
+        String check = "select donor_id from Bank";
+        PreparedStatement ps = connection.prepareStatement(check);
         ResultSet resultSet = ps.executeQuery();
         while (resultSet.next()) {
              donorID = resultSet.getString("donor_id");
