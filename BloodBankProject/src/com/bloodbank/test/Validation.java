@@ -45,4 +45,5 @@ public class Validation {
 		}
 		return bloodType;
 	}
+
 }

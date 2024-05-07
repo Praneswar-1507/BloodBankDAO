@@ -16,7 +16,7 @@ public class Jdbc {
 	public static void update(int quantity,String bloodType)throws ClassNotFoundException, SQLException {
 		Connection connection = Util.getConnection();
 		int totalQty=0;
-		String updateStock="select quantity_available from stock where bloodType=?";
+		String updateStock="select quantity_available from stock where blood_type=?";
 		PreparedStatement p = connection.prepareStatement(updateStock);
 		p.setString(1,bloodType);
 		ResultSet resultSet= p.executeQuery();
@@ -24,7 +24,7 @@ public class Jdbc {
 			int qty= resultSet.getInt("quantity_available");
 			totalQty= qty+quantity;
 		}
-		String updatedStock = "update stock set quantity_available = "+totalQty+" where bloodType= '"+bloodType+"';";
+		String updatedStock = "update stock set quantity_available = "+totalQty+" where blood_type= '"+bloodType+"';";
 		 p = connection.prepareStatement(updatedStock);
 		 int row=p.executeUpdate();
 		 System.out.println("updated  :"+row);

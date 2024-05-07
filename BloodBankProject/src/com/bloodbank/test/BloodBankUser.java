@@ -2,6 +2,7 @@ package com.bloodbank.test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,11 +11,11 @@ import com.bloodbank.model.BloodBank;
 import com.bloodbank.util.Jdbc;
 
 public class BloodBankUser {
-	boolean donorIdChecker(Scanner scanner, String[] donorId, String donorID, BloodBank a) {
+	boolean donorIdChecker1(Scanner scanner, ArrayList<String> donorId, String donorID, BloodBank a) {
 		while (scanner.hasNext()) {
 			donorID = scanner.next();
-			for (int i = 0; i < donorId.length; i++) {
-				if (donorId[i].equals(donorID)) {
+			for (String s:donorId) {
+				if (s.equals(donorID)) {
 					System.out.println("matched");
 					a.setDonorId(donorID);
 					return true;
@@ -24,6 +25,8 @@ public class BloodBankUser {
 		}
 		return false;
 	}
+	
+	
 
 	public void user() throws ClassNotFoundException, SQLException {
 		String bloodType, donorName, password, donorID = null;
@@ -40,7 +43,10 @@ public class BloodBankUser {
 		bloodgroup.add("A+");
 		bloodgroup.add("B+");
 		bloodgroup.add("O+");
-		String[] donorId = { "abc123", "adc321", "ada223" };
+		ArrayList<String> donorId =new ArrayList<>();
+		donorId.add("abc123");
+		donorId.add("ada321");
+		donorId.add("agf542");
 		if (donor.equalsIgnoreCase("yes")) {
 			System.out.println("Are You New Donor(yes/no):");
 			String user = scanner.next();
@@ -49,7 +55,7 @@ public class BloodBankUser {
 				donorName = scanner.next();
 				a.setDonorName(donorName);
 				System.out.println("Enter Donor id:");
-				if (donorIdChecker(scanner, donorId, donorID, a)) {
+				if (donorIdChecker1(scanner,donorId, donorID, a)) {
 					System.out.println("Enter Password:");
 					password = scanner.next();
 					a.setPassword(c.passwordCheck(scanner, password));
@@ -126,8 +132,7 @@ public class BloodBankUser {
 			
 			}
 			
-			BloodBankAdmin g = new BloodBankAdmin();
-			g.DonorUpdate(a);
+			Jdbc.insert(a.getDonorId(), a.getDonorName(), a.getBloodType(), a.getQuantity());
 			} else {
 			System.out.println("Enter Recipient name:");
 			String recipientName = scanner.next();
@@ -159,4 +164,8 @@ public class BloodBankUser {
 			System.out.println("            --------Thankyou for contacting us--------");
 		}
 	}
+
+
+
+
 }

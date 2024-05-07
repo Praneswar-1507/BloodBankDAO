@@ -7,6 +7,8 @@ import com.bloodbank.util.Jdbc;
 public class BloodBankAdmin {
 	public void admin() throws ClassNotFoundException, SQLException
 	{
+		BloodBank a=new BloodBank();
+		Validation c=new Validation();
 		Scanner d=new Scanner(System.in);
 		System.out.println("Enter admin name:");
 		String adminName=d.next();
@@ -25,16 +27,22 @@ public class BloodBankAdmin {
 		}
 		System.out.println("------------login successfully-------------");
 		System.out.println("1.adding stock 2.Delete,3.Display donor Details");
+		try
+		{
 		int Details=d.nextInt();
+		
 		switch(Details)
 		{
 		case 1:
 		{
 			System.out.println("Enter type of blood:");
 			String bloodType=d.next();
+			a.setBloodType(c.BloodTypeCheck(d, bloodType));
 			System.out.println("Enter quantity of blood to be added:");
 			int quantityAdded=d.nextInt();
+			a.setQuantity(c.quantityCheck(d, quantityAdded));
 			Jdbc.update(quantityAdded,bloodType);
+			break;
 		}
 		case 2:
 		{
@@ -51,24 +59,16 @@ public class BloodBankAdmin {
 			
 		
 	}
-	}
-		public void DonorUpdate(BloodBank a) throws ClassNotFoundException, SQLException
-		{
-			Scanner y=new Scanner(System.in);
-		System.out.println("Select T0 Make Changes In Database\n1.Insert\n2.Updtate ");
-		int select=y.nextInt();
-		switch(select)
-		{
-		case 1:
-		Jdbc.insert(a.getDonorId(),a.getDonorName(),a.getBloodType(),a.getQuantity());
-		break;
-		
-		
-	}
-		}
-		
 	
-
+		
+		
+	}
+	catch(Exception ex)
+	{
+		System.out.println(ex.getMessage());
+	}
+	
+	}
 }
 
 
